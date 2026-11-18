@@ -1,33 +1,109 @@
-# React + TypeScript + Vite
+# MiniGoogle
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+MiniGoogle is an interactive search engine demonstrator built with React, TypeScript, and Vite. It shows how two ranking techniques can produce different results for the same search query:
 
-Currently, two official plugins are available:
+- **Word Frequency**: ranks relevant pages by how often the query terms occur.
+- **PageRank**: ranks relevant pages by link-authority scores.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The interface uses a simple, old-school search engine style with the classic blue, red, yellow, and green wordmark colors.
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Search across six predefined webpages
+- Switch between Word Frequency, PageRank, and Compare Both modes
+- Compare rankings side-by-side
+- Expand ranking explanations for individual results
+- Explore directed links in an interactive web graph
+- Adjust the PageRank damping factor
+- Step through PageRank iterations
+- View PageRank scores in an interactive bar chart
+- Browse and filter the complete dataset
+- Responsive desktop and mobile layouts
 
-## Expanding the Oxlint configuration
+## Search Example
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+Try queries such as:
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+- `pizza`
+- `food`
+- `canteen`
+- `Pune`
+- `chai`
+- `recipes`
+
+For PageRank searches, pages are first matched against the query and then sorted by their calculated PageRank score. PageRank does not introduce unrelated pages.
+
+## Ranking Algorithms
+
+### Word Frequency
+
+The query and page text are normalized to lowercase tokens. The score is the sum of each query term's occurrence count on that page.
+
+```text
+TF(page, query) = sum(frequency(query term, page text))
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
-# MiniGoogle
+### PageRank
+
+PageRank is calculated iteratively over the directed link graph using a configurable damping factor:
+
+```text
+PR(i) = (1 - d) / N + d * sum(PR(j) / outgoingLinks(j))
+```
+
+- Default damping factor: `0.85`
+- Default iterations: `20`
+- Convergence threshold: `0.000001`
+- Dangling pages contribute their rank evenly across all pages
+
+## Project Structure
+
+```text
+src/
+├── algorithms/
+│   ├── pageRank.ts
+│   └── wordFrequency.ts
+├── data/
+│   └── webpages.ts
+├── App.tsx
+├── App.css
+└── index.css
+```
+
+## Getting Started
+
+### Requirements
+
+- Node.js 20 or later
+- npm
+
+### Install and run
+
+```bash
+npm install
+npm run dev
+```
+
+Open the local URL displayed by Vite, typically `http://localhost:5173`.
+
+### Production build
+
+```bash
+npm run build
+npm run preview
+```
+
+### Lint
+
+```bash
+npm run lint
+```
+
+## Technology
+
+- React
+- TypeScript
+- Vite
+- Recharts
+- D3
+- Lucide React
